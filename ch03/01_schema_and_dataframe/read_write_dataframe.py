@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
-from pyspark.sql.functions import col
+from pyspark.sql.functions import *
 
 if __name__ == "__main__":
     spark = SparkSession.builder.appName("fireDataFrame").getOrCreate()
@@ -43,7 +43,16 @@ if __name__ == "__main__":
     few_fire_df = fire_df.select("IncidentNumber", "AvailableDtTm", "CallType").where(
         col("CallType") != "Medical Incident"
     )
-    fire_df.write.format("parquet").save("./fire_df.parquet")
+
+    # fire_df.write.format("parquet").save("./fire_df.parquet")
     few_fire_df.show(5, truncate=False)
 
-    few_fire_df.write.format("parquet").saveAsTable("few_fire_df")
+    # few_fire_df.write.format("parquet").saveAsTable("few_fire_df")
+
+    fire_df.select("CallType").where(col("CallType").isNotNull()).agg(
+        countDistinct("CallType").alias("DistinctCallTypes")
+    ).show()
+
+    fire_df.select("CallType").where(col("CallType").isNotNull()).distinct().show(
+        10, False
+    )
