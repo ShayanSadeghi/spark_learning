@@ -43,5 +43,7 @@ if __name__ == "__main__":
     few_fire_df = fire_df.select("IncidentNumber", "AvailableDtTm", "CallType").where(
         col("CallType") != "Medical Incident"
     )
-
+    fire_df.write.format("parquet").save("./fire_df.parquet")
     few_fire_df.show(5, truncate=False)
+
+    few_fire_df.write.format("parquet").saveAsTable("few_fire_df")
