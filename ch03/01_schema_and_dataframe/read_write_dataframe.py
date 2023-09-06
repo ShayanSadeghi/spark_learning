@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
+from pyspark.sql.functions import col
 
 if __name__ == "__main__":
     spark = SparkSession.builder.appName("fireDataFrame").getOrCreate()
@@ -38,3 +39,9 @@ if __name__ == "__main__":
 
     file_fire = "./large_files/Fire_Incidents.csv"
     fire_df = spark.read.csv(file_fire, header=True, schema=fire_schema)
+
+    few_fire_df = fire_df.select("IncidentNumber", "AvailableDtTm", "CallType").where(
+        col("CallType") != "Medical Incident"
+    )
+
+    few_fire_df.show(5, truncate=False)
