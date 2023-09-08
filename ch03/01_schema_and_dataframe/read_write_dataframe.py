@@ -12,9 +12,9 @@ if __name__ == "__main__":
             StructField("Address", StringType(), True),
             StructField("IncidentDate", StringType(), True),
             StructField("CallNumber", IntegerType(), True),
-            StructField("AlarmDtTm ", StringType(), True),
-            StructField("ArrivalDtTm ", StringType(), True),
-            StructField("CloseDtTm  ", StringType(), True),
+            StructField("AlarmDtTm", StringType(), True),
+            StructField("ArrivalDtTm", StringType(), True),
+            StructField("CloseDtTm", StringType(), True),
             StructField("City", StringType(), True),
             StructField("Zipcode", IntegerType(), True),
             StructField("Battalion", StringType(), True),
@@ -102,3 +102,29 @@ if __name__ == "__main__":
     new_fire_df.select("city", "StationArea").where(col("FireInjuries") < 5).show(
         10, False
     )
+
+    fire_df.select("IncidentDate", "AlarmDtTm", "ArrivalDtTm", "CloseDtTm").show(
+        5, False
+    )
+
+    fire_ts_df = (
+        (
+            (
+                fire_df.withColumn(
+                    "IncidentDt", to_date(col("IncidentDate"), "yyyy-MM-dd'T'HH:mm:ss")
+                )
+                .withColumn(
+                    "AlarmDT", to_timestamp(col("AlarmDtTm"), "yyyy-MM-dd'T'HH:mm:ss")
+                )
+                .drop("AlarmDtTm")
+            )
+            .withColumn(
+                "ArrivalDT", to_timestamp(col("ArrivalDtTm"), "yyyy-MM-dd'T'HH:mm:ss")
+            )
+            .drop("ArrivalDtTm")
+        )
+        .withColumn("CloseDT", to_timestamp(col("CloseDtTm"), "yyyy-MM-dd'T'HH:mm:ss"))
+        .drop("CloseDtTm")
+    )
+
+    fire_ts_df.select("IncidentDt", "AlarmDT", "ArrivalDT", "CloseDT").show(5, False)
