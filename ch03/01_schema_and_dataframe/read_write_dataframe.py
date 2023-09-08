@@ -128,3 +128,4 @@ if __name__ == "__main__":
     )
 
     fire_ts_df.select("IncidentDt", "AlarmDT", "ArrivalDT", "CloseDT").show(5, False)
+    fire_ts_df.select(year("IncidentDt")).distinct().orderBy(year("IncidentDt")).show()
