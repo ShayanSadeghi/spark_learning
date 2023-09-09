@@ -1,2 +1,4 @@
 venv/
 large_files/
+ch03/01_schema_and_dataframe/spark-warehouse
+ch03/01_schema_and_dataframe/fire_df.parquet
