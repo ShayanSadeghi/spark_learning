@@ -44,7 +44,7 @@ if __name__ == "__main__":
             StructField("AreaOfFireOrigin", StringType(), True),
             StructField("IgnitionCause", StringType(), True),
             StructField("IgnitionFactorPrimary", StringType(), True),
-            StructField("Ignition Factor Secondary", StringType(), True),
+            StructField("IgnitionFactorSecondary", StringType(), True),
             StructField("HeatSource", StringType(), True),
             StructField("ItemFirstIgnited", StringType(), True),
             StructField("HumanFactorsAssociatedWithIgnition", StringType(), True),
@@ -59,21 +59,18 @@ if __name__ == "__main__":
             StructField("NumberOfFloorsWithExtremeDamage", StringType(), True),
             StructField("Detectors Present", StringType(), True),
             StructField("DetectorType", StringType(), True),
-            StructField("Detector Operation", StringType(), True),
-            StructField("Detector Effectiveness", StringType(), True),
-            StructField("Detector Failure Reason", StringType(), True),
-            StructField("Automatic Extinguishing System Present", StringType(), True),
-            StructField("Automatic Extinguishing System Type", StringType(), True),
+            StructField("DetectorOperation", StringType(), True),
+            StructField("DetectorEffectiveness", StringType(), True),
+            StructField("DetectorFailureReason", StringType(), True),
+            StructField("AutomaticExtinguishingSystemPresent", StringType(), True),
+            StructField("AutomaticExtinguishingSystemType", StringType(), True),
+            StructField("AutomaticExtinguishingSystemPerformance", StringType(), True),
             StructField(
-                "Automatic Extinguishing System Performance", StringType(), True
+                "AutomaticExtinguishingSystemFailureReason", StringType(), True
             ),
-            StructField(
-                "Automatic Extinguishing System Failure Reason", StringType(), True
-            ),
-            StructField("Number of Sprinkler Heads Operating", StringType(), True),
-            StructField(
-                "Supervisor District|neighborhood_district", StringType(), True
-            ),
+            StructField("NumberOfSprinklerHeadsOperating", StringType(), True),
+            StructField("neighborhood_district", StringType(), True),
+            StructField("SupervisorDistrict", StringType(), True),
             StructField("point", StringType(), True),
         ]
     )
@@ -129,3 +126,9 @@ if __name__ == "__main__":
 
     fire_ts_df.select("IncidentDt", "AlarmDT", "ArrivalDT", "CloseDT").show(5, False)
     fire_ts_df.select(year("IncidentDt")).distinct().orderBy(year("IncidentDt")).show()
+
+    fire_df.select("HumanFactorsAssociatedWithIgnition").where(
+        col("HumanFactorsAssociatedWithIgnition").isNotNull()
+    ).groupBy("HumanFactorsAssociatedWithIgnition").count().orderBy(
+        "count", ascending=False
+    ).show()
